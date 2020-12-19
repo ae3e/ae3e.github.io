@@ -48,9 +48,17 @@ async function getGist(id) {
 }
 
 if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
-    getGist(id).then(data =>{
-        let md = data.files["README.md"].content
-        document.getElementById('root').innerHTML = marked(md);
+    getGist(id).then(gist =>{
+        console.log(gist)
+        let updated = '';
+        if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0]){
+            updated=`(Updated: ${gist.updated_at.split('T')[0]})`
+        }
+        let md = gist.files["README.md"].content
+        document.getElementById('root').innerHTML = `
+        <h1 class="blog-post-title">${gist.description}</h1>
+        ${marked(md)}
+        <div class="blog-post-bottom meta">${gist.created_at.split('T')[0]+' '+updated}</div>`;
     })
 }else{
     getGists().then(data => {
@@ -61,7 +69,7 @@ if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
             if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0]){
                 updated=`(Updated : ${gist.updated_at.split('T')[0]})`
             }
-            code += `<div class="blog-post-text">>_ <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="?id=${gist.id}">${gist.description}</a><br/></div>
+            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="?id=${gist.id}">${gist.description}</a><br/></div>
             `
         })
         //console.log(data)
