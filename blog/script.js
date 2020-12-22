@@ -47,6 +47,12 @@ async function getGist(id) {
     return data;
 }
 
+async function isAdmin(token) {
+    let response = await fetch(`https://script.google.com/macros/s/AKfycbxSBAMZLZVVWq7hqAzn4ocaZzDUhDWWiwFpBBaFo0IOepE63D1LNnrkOw/exec?token=${token}`)
+    const data = await response.json();
+    return data;
+}
+
 if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
     getGist(id).then(gist =>{
         console.log(gist)
@@ -56,9 +62,16 @@ if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
         }
         let md = gist.files["README.md"].content
         document.getElementById('root').innerHTML = `
-        <h1 class="blog-post-title">${gist.description}</h1>
+        <h1 class="blog-post-title">${gist.description} ${gist.public?"":'<sup style="font-weight:ligter;font-size:12px; margin-top:-10px;padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</sup>'}</h1>
         ${marked(md)}
-        <div class="blog-post-bottom meta">${gist.created_at.split('T')[0]+' '+updated}</div>`;
+        <div class="blog-post-bottom meta">${gist.created_at.split('T')[0]+' '+updated}<span id='edit'></span></div>`;
+        console.log(localStorage.getItem('token'))
+        isAdmin(localStorage.getItem('token')).then(data=>{
+            console.log(data)
+            if(data.admin){
+                document.getElementById('edit').innerHTML= `- <a href="https://gist.github.com/ae3e/${gist.id}" target="_blank">${gist.id}</a>`
+            }
+        })
     })
 }else{
     getGists().then(data => {
@@ -67,9 +80,9 @@ if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
         filteredGists.forEach(gist => {
             let updated = '';
             if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0]){
-                updated=`(Updated : ${gist.updated_at.split('T')[0]})`
+                updated=` (Updated : ${gist.updated_at.split('T')[0]})`
             }
-            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="?id=${gist.id}">${gist.description}</a><br/></div>
+            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="?id=${gist.id}">${gist.description}</a>${gist.public?"":'<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>'}<br/></div>
             `
         })
         //console.log(data)
