@@ -79,10 +79,15 @@ if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
         let filteredGists = data.filter(gist=>gist.files['README.md'])
         filteredGists.forEach(gist => {
             let updated = '';
-            if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0]){
+            let updateLabel='';
+            /*if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0]){
                 updated=` (Updated : ${gist.updated_at.split('T')[0]})`
+            }*/
+            if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0] &&
+                new Date(gist.updated_at).getTime()>new Date().getTime()-7*24*3600000){
+                updateLabel = ' Updated'
             }
-            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="?id=${gist.id}">${gist.description}</a>${gist.public?"":'<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>'}<br/></div>
+            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="?id=${gist.id}">${gist.description}</a>${gist.public?"":'<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>'}${updateLabel}<br/></div>
             `
         })
         //console.log(data)
