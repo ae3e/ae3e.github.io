@@ -63,7 +63,7 @@ if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
         let md = gist.files["README.md"].content
         document.getElementById('root').innerHTML = `
         <h1 class="blog-post-title">${gist.description} ${gist.public?"":'<sup style="font-weight:ligter;font-size:12px; margin-top:-10px;padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</sup>'}</h1>
-        ${marked(md)}
+        <div class="blog-post-text">${marked(md)}</div>
         <div class="blog-post-bottom meta">${gist.created_at.split('T')[0]+' '+updated}<span id='edit'></span></div>`;
         console.log(localStorage.getItem('token'))
         isAdmin(localStorage.getItem('token')).then(data=>{
