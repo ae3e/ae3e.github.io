@@ -25,7 +25,7 @@ marked.setOptions({
 async function getGists() {
     let response = null;
     if(window.localStorage.getItem('token')){
-        let baseUrl = "https://script.google.com/macros/s/AKfycbwaB_Q-cHBz8-ZGFKV3UZ1nxy5XyeQEzKCBMmKt0OLng9663q_M/exec";
+        let baseUrl = "https://script.google.com/macros/s/AKfycbzIUBAT-Zi3YWKJRY3bmv_IRlKyr67-sq7x4ZyG5JUsT8zasRPGA5_XYSEgtugDAZWT/exec";
         response = await fetch(baseUrl,
             {
                 method: 'POST',
@@ -48,7 +48,7 @@ async function getGist(id) {
 }
 
 async function isAdmin(token) {
-    let response = await fetch(`https://script.google.com/macros/s/AKfycbxSBAMZLZVVWq7hqAzn4ocaZzDUhDWWiwFpBBaFo0IOepE63D1LNnrkOw/exec?token=${token}`)
+    let response = await fetch(`https://script.google.com/macros/s/AKfycbzIUBAT-Zi3YWKJRY3bmv_IRlKyr67-sq7x4ZyG5JUsT8zasRPGA5_XYSEgtugDAZWT/exec?token=${token}`)
     const data = await response.json();
     return data;
 }
