@@ -67,7 +67,7 @@ if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
 
         if (md[0] === '{') {
             //ADD OBSERVABLE NOTEBOOK
-            innerHTML += `<div id="notebook"></div>`
+            innerHTML += `<div class="blog-post-text" id="notebook"></div>`
 
             let config = JSON.parse(md);
             //http://localhost:8080/blog/notebook.html?id=2b6b4376067a377b&cells=intro;viewof%20map;profil&fitWidth=part2
