@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <title>ME</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="//fonts.googleapis.com/css?family=Roboto+Mono:400,400i,700" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css?family=Roboto:700" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link href="blog/bootstrap.css" rel="stylesheet">
+  <link href="blog/blog.css" rel="stylesheet">
+
+
+</head>
+
+<body class="home blog">
+
+  <div class="container">
+
+    <div class="blog-post">
+
+      <!--<span class="blog-post-title">Live Tracking</span>-->
+      <div id="root" class="blog-post-text">
+
+      </div>
+      <script type="module">
+
+        //http://localhost:8080/blog/notebook.html?id=2b6b4376067a377b&cells=intro;viewof%20map;profil&fitWidth=part2
+        //http://localhost:8080/blog/notebook.html?id=d196da0f4af791f7
+
+        //import define from "https://api.observablehq.com/d/2b6b4376067a377b.js?v=3";
+        //console.log(define);
+        import { Runtime, Inspector, Library } from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+        (async () => {
+          //let {Runtime, Inspector, Library} = await import("https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js");
+
+          let id = '65bd6e28cbb67e0b';
+
+          //import define from "https://api.observablehq.com/d/2b6b4376067a377b.js?v=3";
+          let def = await import('https://api.observablehq.com/d/' + id + '.js?v=3');
+          let define = def.default
+          console.log(Runtime)
+          console.log(Inspector)
+          console.log(Library)
+          console.log(define)
+          let cells = ["intro", "viewof route", "routeStat", "viewof map", "profil", "lastrequest", "blog"];
+
+          console.log(cells)
+          if (cells) {
+            let root = document.querySelector("#root");
+            cells.forEach((cell, i) => {
+              let div = document.createElement('div');
+              div.id = 'part' + i;
+
+              root.appendChild(div);
+            });
+
+            const stdlib = new Library;
+
+
+            let fitWidth = 'part3';
+            console.log(fitWidth)
+            if (fitWidth) {
+              const test = document.querySelector('#' + fitWidth);
+
+              const library = Object.assign({}, stdlib, { width });
+
+              function width() {
+                return stdlib.Generators.observe(notify => {
+                  let width = notify(test.clientWidth);
+
+                  function resized() {
+                    let width1 = test.clientWidth;
+                    if (width1 !== width) notify(width = width1);
+                  }
+
+                  window.addEventListener("resize", resized);
+                  return () => window.removeEventListener("resize", resized);
+                });
+              }
+              new Runtime(library).module(define, name => {
+                let i = cells.indexOf(name)
+                if (i != -1) {
+                  return new Inspector(document.querySelector("#part" + i));
+                }
+              })
+
+            } else {
+              new Runtime(stdlib).module(define, name => {
+                let i = cells.indexOf(name)
+                if (i != -1) {
+                  return new Inspector(document.querySelector("#part" + i));
+                }
+              })
+            }
+
+
+
+          } else {
+            new Runtime().module(define, Inspector.into(document.querySelector("#root")))
+          }
+        })()
+
+
+      </script>
+    </div>
+    <div>
+
+</html>
