@@ -77,17 +77,21 @@ if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
     getGists().then(data => {
         let code = ''
         let filteredGists = data.filter(gist=>gist.files['README.md'])
-        filteredGists.forEach(gist => {
+        
+        //Merge gists and notebooks
+        let posts = filteredGists.concat(metaNotebooks);
+        posts.sort(function (a, b) {
+            return new Date(b.created_at) - new Date(a.created_at);
+          })
+          posts.forEach(post => {
             let updated = '';
             let updateLabel='';
-            /*if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0]){
-                updated=` (Updated : ${gist.updated_at.split('T')[0]})`
-            }*/
-            if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0] &&
-                new Date(gist.updated_at).getTime()>new Date().getTime()-7*24*3600000){
+
+            if(post.created_at.split('T')[0]!==post.updated_at.split('T')[0] &&
+                new Date(post.updated_at).getTime()>new Date().getTime()-7*24*3600000){
                 updateLabel = ' Updated'
             }
-            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="?id=${gist.id}">${gist.description}</a>${gist.public?"":'<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>'}${updateLabel}<br/></div>
+            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${post.created_at.split('T')[0]}</b>${updated} - <a  href="${post.type=='notebook'?post.id:'?id='+post.id}">${post.description}</a>${post.public?"":'<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>'}${updateLabel}<br/></div>
             `
         })
         //console.log(data)
@@ -95,3 +99,12 @@ if(id){ //d0c7bc5cfb6c972e8d801c7a1959214b
     
     })
 }
+
+let metaNotebooks=[{
+    id:"./notebook?id=65bd6e28cbb67e0b&cells=intro;viewof%20route;routeStat;viewof%20map;profil;lastrequest;blog&fitWidth=part3",
+    description:"Cycle challenge",
+    created_at:"2021-09-13",
+    updated_at:"2021-09-13",
+    public:true,
+    type:'notebook'
+}]
