@@ -22,16 +22,27 @@ marked.setOptions({
     xhtml: false
 });
 
-async function getPosts() {
+async function getGists() {
     let response = null;
-
-    response = await fetch(`https://directus.ae3e.com/items/posts?sort=-date_created&${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}`)
+    if (window.localStorage.getItem('token')) {
+        let baseUrl = "https://script.google.com/macros/s/AKfycbzIUBAT-Zi3YWKJRY3bmv_IRlKyr67-sq7x4ZyG5JUsT8zasRPGA5_XYSEgtugDAZWT/exec";
+        response = await fetch(baseUrl,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    service: 'Github',
+                    token: window.localStorage.getItem('token')
+                })
+            });
+    } else {
+        response = await fetch("https://api.github.com/users/ae3e/gists")
+    }
     const data = await response.json();
     return data;
 }
 
-async function getPost(id) {
-    let response = await fetch(`https://directus.ae3e.com/items/posts/${id}?${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}`)
+async function getGist(id) {
+    let response = await fetch(`https://api.github.com/gists/${id}`)
     const data = await response.json();
     return data;
 }
@@ -43,17 +54,16 @@ async function isAdmin(token) {
 }
 
 if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
-    getPost(id).then(post => {
-        console.log(post)
-        post = post.data;
+    getGist(id).then(gist => {
+        console.log(gist)
         let updated = '';
-        if (post.date_updated && post.date_created.split('T')[0] !== post.date_updated.split('T')[0]) {
-            updated = `(Updated: ${post.date_updated.split('T')[0]})`
+        if (gist.created_at.split('T')[0] !== gist.updated_at.split('T')[0]) {
+            updated = `(Updated: ${gist.updated_at.split('T')[0]})`
         }
-        let md = post.content
+        let md = gist.files["README.md"].content
 
         //ADD HEADER
-        let innerHTML = `<h1 class="blog-post-title">${post.title} ${post.status === "published" ? "" : '<sup style="font-weight:ligter;font-size:12px; margin-top:-10px;padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</sup>'}</h1>`
+        let innerHTML = `<h1 class="blog-post-title">${gist.description} ${gist.public ? "" : '<sup style="font-weight:ligter;font-size:12px; margin-top:-10px;padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</sup>'}</h1>`
 
         if (md[0] === '{') {
             //ADD OBSERVABLE NOTEBOOK
@@ -145,7 +155,7 @@ if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
         }
 
         //ADD FOOTER
-        innerHTML += `<div class="blog-post-bottom meta">${post.date_created.split('T')[0] + ' ' + updated}<span id='edit'></span></div>`;
+        innerHTML += `<div class="blog-post-bottom meta">${gist.created_at.split('T')[0] + ' ' + updated}<span id='edit'></span></div>`;
         document.getElementById('root').innerHTML = innerHTML;
         isAdmin(localStorage.getItem('token')).then(data => {
             console.log(data)
@@ -155,20 +165,21 @@ if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
         })
     })
 } else {
-    getPosts().then(data => {
+    getGists().then(data => {
         let code = ''
+        let filteredGists = data.filter(gist => gist.files['README.md'])
 
-        console.log(data)
-        let posts = data.data
-        posts.forEach(post => {
+        filteredGists.forEach(gist => {
             let updated = '';
             let updateLabel = '';
-
-            if (post.date_updated && post.date_created.split('T')[0] !== post.date_updated.split('T')[0] &&
-                new Date(post.date_updated).getTime() > new Date().getTime() - 7 * 24 * 3600000) {
+            /*if(gist.created_at.split('T')[0]!==gist.updated_at.split('T')[0]){
+                updated=` (Updated : ${gist.updated_at.split('T')[0]})`
+            }*/
+            if (gist.created_at.split('T')[0] !== gist.updated_at.split('T')[0] &&
+                new Date(gist.updated_at).getTime() > new Date().getTime() - 7 * 24 * 3600000) {
                 updateLabel = ' Updated'
             }
-            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${post.date_created.split('T')[0]}</b>${updated} - <a  href="${post.type == 'notebook' ? post.id : '?id=' + post.id}">${post.title}</a>${post.status === "published" ? "" : '<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>'}${updateLabel}<br/></div>
+            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${gist.created_at.split('T')[0]}</b>${updated} - <a  href="${gist.type == 'notebook' ? gist.id : '?id=' + gist.id}">${gist.description}</a>${gist.public ? "" : '<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>'}${updateLabel}<br/></div>
             `
         })
         //console.log(data)
