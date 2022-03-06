@@ -1,1 +1,1 @@
-{"longitude":13.419998,"elevation":44.8125,"latitude":52.52,"generationtime_ms":0.18095970153808594,"utc_offset_seconds":0,"current_weather":{"windspeed":5.2,"weathercode":3,"winddirection":359,"temperature":-0.8,"time":"2022-03-06T06:00"}}
+{"latitude":52.52,"utc_offset_seconds":0,"longitude":13.419998,"current_weather":{"weathercode":3,"temperature":-0.7,"time":"2022-03-06T07:00","windspeed":6.3,"winddirection":3},"elevation":44.8125,"generationtime_ms":0.17499923706054688}
