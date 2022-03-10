@@ -22,6 +22,7 @@ marked.setOptions({
     xhtml: false
 });
 
+
 async function getPosts() {
     let response = null;
 
@@ -185,3 +186,80 @@ let metaNotebooks = [{
     public: true,
     type: 'notebook'
 }]
+
+async function getWeather() {
+    let response = null;
+
+    //response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=48.68853&longitude=5.619284&current_weather=true`)
+    response = await fetch(`https://directus.ae3e.com/items/measurements?access_token=blog&limit=4&sort=-time`)
+    const data = await response.json();
+    return data;
+}
+
+getWeather().then(data => {
+    console.log(data)
+
+    const weather_codes = {
+        0: "Clear sky",
+        1: "Mainly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Fog",
+        48: "Depositing rime fog",
+        51: "Light drizzle",
+        53: "Moderate drizzle",
+        55: "Dense drizzle",
+        56: "Light freezing drizzle",
+        57: "Dense freezing drizzle",
+        61: "Slight rain",
+        63: "Moderate rain",
+        65: "Heavy rain",
+        66: "Light freezing rain",
+        67: "Heavy freezing rain",
+        71: "Slight snow fall",
+        73: "Moderate snow fall",
+        75: "Heavy snow fall",
+        77: "Snow grains",
+        80: "Slight rain showers",
+        81: "Moderate rain showers",
+        82: "Violent rain showers",
+        85: "Slight snow showers",
+        86: "Heavy snow showers",
+        95: "Slight or moderate thunderstorm",
+        96: "Thunderstorm with slight hail",
+        99: "Thunderstorm with heavy hail"
+    }
+
+    const weather_icons = {
+        0: "wi-day-sunny",
+        1: "wi-day-sunny-overcast",
+        2: "wi-day-cloudy",
+        3: "wi-cloudy",
+        45: "wi-fog",
+        48: "wi-fog",
+        51: "wi-sleet",
+        53: "wi-showers",
+        55: "wi-hail",
+        56: "wi-sleet",
+        57: "wi-hail",
+        61: "wi-hail",
+        63: "wi-rain-mix",
+        65: "wi-rain",
+        66: "wi-hail",
+        67: "wi-rain",
+        71: "wi-snow",
+        73: "wi-snow",
+        75: "wi-snow",
+        77: "wi-snow",
+        80: "wi-showers",
+        81: "wi-showers",
+        82: "wi-showers",
+        85: "wi-snow",
+        86: "wi-snow",
+        95: "wi-storm-showers",
+        96: "wi-thunderstorm",
+        99: "wi-thunderstorm"
+    }
+    document.getElementById('external-temp').innerHTML = `<span title="${data.data[0].time}">${Math.round(data.data.filter((elt) => elt.sensor_id === 23)[0].measurement)}°C </span>| <i alt="${data.data[0].time}" class="wi ${weather_icons[data.data.filter((elt) => elt.sensor_id === 26)[0].measurement]}"></i> ${weather_codes[data.data.filter((elt) => elt.sensor_id === 26)[0].measurement]} | <span style="font-size:20px;display:inline-block;transform-origin:50% 65%;transform: rotate(${data.data.filter((elt) => elt.sensor_id === 24)[0].measurement + 180}deg);">↑</span> ${Math.round(data.data.filter((elt) => elt.sensor_id === 25)[0].measurement)}<span style="font-size:12px">km/h</span>`;
+
+})

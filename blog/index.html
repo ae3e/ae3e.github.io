@@ -19,6 +19,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github.css">
   <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.4.0/build/highlight.min.js"></script>
 
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css' />
+  <link rel='stylesheet'
+    href='https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons-wind.min.css' />
+
   <script type="text/javascript">
     function blink() {
       var blinks = document.getElementsByTagName('blink');
@@ -47,11 +51,15 @@
         <blink><span class="cursor">&nbsp;</span></blink>
       </div>
     </a>
+    <div class="data-banner">
+      <span id="external-temp">-°C|Unknown</span>
+    </div>
 
     <div class="blog-post">
       <div id="root">Loading...</div>
     </div>
-    <div>
-      <script type="module" src="script.js"></script>
+    <script type="module" src="script.js"></script>
+  </div>
+</body>
 
 </html>
