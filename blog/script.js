@@ -303,7 +303,7 @@ function displayEvents(search) {
                     break;
 
             }
-            code += '</div>'
+            code += `${event.private ? '<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>' : ""}${updateLabel}<br/></div>`
         })
         //console.log(data)
         document.getElementById('root').innerHTML = code;
