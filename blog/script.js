@@ -131,7 +131,7 @@ let formatSpeed = (ms, type) => {
 async function getEvents() {
     let response = null;
 
-    response = await fetch(`https://directus.ae3e.com/items/events?sort=-start&${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}`)
+    response = await fetch(`https://directus.ae3e.com/items/events?filter={"category":{"_in":["activity","post"]}}&limit=20&sort=-start&${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}`)
     const data = await response.json();
     return data;
 }
@@ -266,17 +266,19 @@ if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
 
         console.log(data)
         let events = data.data
-        events.forEach(event => {
-            let updated = '';
-            let updateLabel = '';
+        events.filter(elt => elt.category === "activity" || elt.category === "post")
+            .forEach(event => {
+                console.log(event.category)
+                let updated = '';
+                let updateLabel = '';
 
-            if (event.end && event.start.split('T')[0] !== event.end.split('T')[0] &&
-                new Date(event.end).getTime() > new Date().getTime() - 7 * 24 * 3600000) {
-                updateLabel = ' Updated'
-            }
-            code += `<div class="blog-post-text"><span class="passive">&gt;_</span> <b>${event.start.split('T')[0]}</b>${updated} - ${event.category === 'post' ? '<a  href="?id=' + event.extra.id + '">' + event.description + '</a>' : icons[event.extra.type] + ' ' + event.description + ' <span style="color:#CCC;font-size:14px"> ' + (event.extra.distance / 1000).toFixed(1) + 'km | ' + formatDuration(event.extra.moving_time) + ' | ' + formatSpeed(event.extra.average_speed, event.extra.type) + (event.extra.total_elevation_gain !== 0 ? ' | ' + Math.round(event.extra.total_elevation_gain) + 'm' : '') + (event.extra.average_heartrate ? ' | ' + Math.round(event.extra.average_heartrate) + 'bpm' : '')}</span>${event.private ? '<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>' : ""}${updateLabel}<br/></div>
+                if (event.end && event.start.split('T')[0] !== event.end.split('T')[0] &&
+                    new Date(event.end).getTime() > new Date().getTime() - 7 * 24 * 3600000) {
+                    updateLabel = ' Updated'
+                }
+                code += `<div style="padding-left: 1.5em;text-indent:-1.5em;" class="blog-post-text"><span class="passive">&gt;_</span> <b>${event.start.split('T')[0]}</b>${updated} - ${event.category === 'post' ? '<a   href="?id=' + event.extra.id + '">' + event.description + '</a>' : icons[event.extra.type] + ' ' + event.description + ' <span class="hidden-sm-up"><br/></span><span style="color:#CCC;font-size:14px"> ' + (event.extra.distance / 1000).toFixed(1) + 'km | ' + formatDuration(event.extra.moving_time) + ' | ' + formatSpeed(event.extra.average_speed, event.extra.type) + '</span><span class="hidden-sm-down" style="color:#CCC;font-size:14px">' + (event.extra.total_elevation_gain !== 0 ? ' | ' + Math.round(event.extra.total_elevation_gain) + 'm' : '') + (event.extra.average_heartrate ? ' | ' + Math.round(event.extra.average_heartrate) + 'bpm' : '')}</span>${event.private ? '<span style="padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</span>' : ""}${updateLabel}<br/></div>
             `
-        })
+            })
         //console.log(data)
         document.getElementById('root').innerHTML = code;
 
