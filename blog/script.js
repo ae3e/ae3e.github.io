@@ -146,7 +146,7 @@ async function getEvents(categories, search) {
 
 async function getPost(id) {
 
-    let response = await fetch(`https://directus.ae3e.com/items/posts/${id}?${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}`)
+    let response = await fetch(`https://directus.ae3e.com/items/notes/${id}?${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}`)
     const data = await response.json();
     return data;
 }
@@ -157,7 +157,7 @@ async function isAdmin(token) {
     return data;
 }
 
-let categories = ["activity", "post", "fireman"];
+let categories = ["activity", "note", "fireman"];
 
 if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
     getPost(id).then(post => {
@@ -292,7 +292,7 @@ function displayEvents(search) {
             }
             code += `<div style="padding-left: 1.5em;text-indent:-1.8em;" class="blog-post-text"><span class="passive">&gt;_</span> <b>${event.start.split('T')[0]}</b>${updated} - `;
             switch (event.category) {
-                case "post":
+                case "note":
                     code += '<a   href="?id=' + event.extra.id + '">' + event.description + '</a>';
                     break;
                 case "activity":
