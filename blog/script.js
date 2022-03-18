@@ -293,13 +293,13 @@ function displayEvents(search) {
             code += `<div style="padding-left: 1.5em;text-indent:-1.8em;" class="blog-post-text"><span class="passive">&gt;_</span> <b>${event.start.split('T')[0]}</b>${updated} - `;
             switch (event.category) {
                 case "note":
-                    code += '<a   href="?id=' + event.extra.id + '">' + event.description + '</a>';
+                    code += '<a   href="?id=' + event.extra.id + '">' + event.title + '</a>';
                     break;
                 case "activity":
-                    code += (icons[event.extra.type] + ' ' + event.description + ' <span class="hidden-sm-up"><br/></span><span style="color:#CCC;font-size:14px"> ' + (event.extra.distance / 1000).toFixed(1) + 'km | ' + formatDuration(event.extra.moving_time) + ' | ' + formatSpeed(event.extra.average_speed, event.extra.type) + '</span><span class="hidden-sm-down" style="color:#CCC;font-size:14px">' + (event.extra.total_elevation_gain !== 0 ? ' | ' + Math.round(event.extra.total_elevation_gain) + 'm' : '') + (event.extra.average_heartrate ? ' | ' + Math.round(event.extra.average_heartrate) + 'bpm' : '') + '</span>')
+                    code += (icons[event.extra.type] + ' ' + event.title + ' <span class="hidden-sm-up"><br/></span><span style="color:#CCC;font-size:14px"> ' + (event.extra.distance / 1000).toFixed(1) + 'km | ' + formatDuration(event.extra.moving_time) + ' | ' + formatSpeed(event.extra.average_speed, event.extra.type) + '</span><span class="hidden-sm-down" style="color:#CCC;font-size:14px">' + (event.extra.total_elevation_gain !== 0 ? ' | ' + Math.round(event.extra.total_elevation_gain) + 'm' : '') + (event.extra.average_heartrate ? ' | ' + Math.round(event.extra.average_heartrate) + 'bpm' : '') + '</span>')
                     break;
                 case "fireman":
-                    code += `<span style="color:#A00">${event.description.indexOf("Nat.:") !== -1 ? event.description?.split("Nat.: ")[1]?.split(' Oper')[0] : event.description}</span>`;
+                    code += `<span style="color:#A00">${event.description ? (event.description.indexOf("Nat.:") !== -1 ? event.description?.split("Nat.: ")[1]?.split(' Oper')[0] : event.description) : "Emergency rescue"}</span>`;
                     break;
 
             }
