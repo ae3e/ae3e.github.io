@@ -170,7 +170,7 @@ if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
         let md = post.content
 
         //ADD HEADER
-        let innerHTML = `<h1 class="blog-post-title">${post.title} ${post.status === "published" ? "" : '<sup style="font-weight:ligter;font-size:12px; margin-top:-10px;padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</sup>'}</h1>`
+        let innerHTML = `<h1 class="blog-post-title">${post.title} ${!post.private ? "" : '<sup style="font-weight:ligter;font-size:12px; margin-top:-10px;padding: 1px 5px 1px 5px;background-color:#eb8b7a;">Private</sup>'}</h1>`
 
         if (md[0] === '{') {
             //ADD OBSERVABLE NOTEBOOK
