@@ -303,7 +303,7 @@ function displayEvents(search) {
                     code += `<span style="color:#A00">${event.description ? (event.description.indexOf("Nat.:") !== -1 ? event.description?.split("Nat.: ")[1]?.split(' Oper')[0] : event.description) : "Emergency rescue"}</span>` + privateLabel;
                     break;
                 case "code":
-                    code += `<a href="${event.extra.url}?${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}"> ${event.title} </a> ${privateLabel}`;
+                    code += `<a href="${event.extra.url}&${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}"> ${event.title} </a> ${privateLabel}`;
                     break;
 
             }
