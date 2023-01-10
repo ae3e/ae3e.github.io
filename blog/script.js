@@ -157,7 +157,7 @@ async function isAdmin(token) {
     return data;
 }
 
-let categories = ["activity", "note", "fireman"];
+let categories = ["activity", "note", "fireman", "code"];
 
 if (id) { //d0c7bc5cfb6c972e8d801c7a1959214b
     getPost(id).then(post => {
@@ -301,6 +301,9 @@ function displayEvents(search) {
                     break;
                 case "fireman":
                     code += `<span style="color:#A00">${event.description ? (event.description.indexOf("Nat.:") !== -1 ? event.description?.split("Nat.: ")[1]?.split(' Oper')[0] : event.description) : "Emergency rescue"}</span>` + privateLabel;
+                    break;
+                case "code":
+                    code += `<a href="${event.extra.url}?${window.localStorage.getItem('token') ? 'access_token=' + window.localStorage.getItem('token') : ''}"> ${event.title} </a> ${privateLabel}`;
                     break;
 
             }
